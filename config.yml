@@ -1,0 +1,42 @@
+name: sym-para
+version: 1.0.0
+description: PARA framework (Projects, Areas, Resources, Archive) for codebase knowledge organization with Claude Code hook-triggered triage on git commit.
+
+files:
+  - path: files/QUICK_REFERENCE.md
+    dest: .claude/docs/para/QUICK_REFERENCE.md
+  - path: files/HOOK_SETUP.md
+    dest: .claude/docs/para/HOOK_SETUP.md
+  - path: files/LIFECYCLE.md
+    dest: .claude/docs/para/LIFECYCLE.md
+  - path: files/PROJECT_HYGIENE.md
+    dest: .claude/docs/para/PROJECT_HYGIENE.md
+  - path: files/skills/para-setup/SKILL.md
+    dest: .claude/skills/para-setup/SKILL.md
+  - path: files/skills/para-triage/SKILL.md
+    dest: .claude/skills/para-triage/SKILL.md
+  - path: files/skills/para-review/SKILL.md
+    dest: .claude/skills/para-review/SKILL.md
+  - path: files/para-hook.sh
+    dest: .para/hooks/para-hook.sh
+  - path: files/templates/config.json
+    dest: .para/config.json
+  - path: files/templates/state.json
+    dest: .para/state.json
+  - path: files/templates/pending_classification.txt
+    dest: .para/pending_classification.txt
+  - path: files/templates/archive-index.json
+    dest: .para/archive-index.json
+  - path: files/templates/.gitkeep-reviews
+    dest: .para/reviews/.gitkeep
+
+instructions:
+  - targets:
+      claude: CLAUDE.md
+      cursor: .cursorrules
+      copilot: .github/copilot-instructions.md
+      default: AGENTS.md
+    content: |
+      ## PARA Framework
+
+      PARA organizes codebase knowledge into four categories: Projects (time-bounded goals), Areas (ongoing responsibilities), Resources (reference material), and Archive (inactive items). Run `/para-setup` to install the git commit hook and get started. Use `/para-triage` for file classification and `/para-review` for periodic reviews. See `.claude/docs/para/QUICK_REFERENCE.md` for the full decision table.
