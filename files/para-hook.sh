@@ -30,7 +30,7 @@ esac
 mkdir -p .para/reviews .para/hooks
 
 if [ ! -f .para/config.json ]; then
-  printf '{\n  "review_threshold": 5\n}\n' > .para/config.json
+  printf '{\n  "review_threshold": 1\n}\n' > .para/config.json
 fi
 
 if [ ! -f .para/state.json ]; then
@@ -60,11 +60,11 @@ fi
 
 # ── 6. Check threshold ──────────────────────────────────────────────────────
 if command -v jq > /dev/null 2>&1; then
-  review_threshold=$(jq -r '.review_threshold // 5' .para/config.json 2>/dev/null)
+  review_threshold=$(jq -r '.review_threshold // 1' .para/config.json 2>/dev/null)
 else
   review_threshold=$(grep -o '"review_threshold"[[:space:]]*:[[:space:]]*[0-9]*' .para/config.json 2>/dev/null | grep -o '[0-9]*$')
 fi
-review_threshold=${review_threshold:-5}
+review_threshold=${review_threshold:-1}
 
 # ── 7. If threshold reached, send system message to trigger triage ───────────
 if [ "$new_count" -ge "$review_threshold" ] 2>/dev/null; then

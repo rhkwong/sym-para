@@ -77,10 +77,10 @@ Do not duplicate lines that already exist in `.gitignore`.
 
 Output the following to the user:
 
-> **PARA** organizes codebase knowledge into four categories: **Projects** (time-bounded goals with deadlines), **Areas** (ongoing responsibilities), **Resources** (reference material), and **Archive** (inactive items from any category). The git commit hook you just installed tracks changed files and triggers automatic triage after every 5 commits. You can also run `/para-triage` manually to classify pending files, or `/para-review` for a full periodic review.
+> **PARA** organizes codebase knowledge into four categories: **Projects** (time-bounded goals with deadlines), **Areas** (ongoing responsibilities), **Resources** (reference material), and **Archive** (inactive items from any category). The git commit hook you just installed tracks changed files and triggers automatic triage after each commit. You can also run `/para-triage` manually to classify pending files, or `/para-review` for a full periodic review.
 
 ## Step 6 — Suggest first action
 
 Output:
 
-> **Next steps:** Run `/para-review` now to classify your existing codebase, or just start coding and triage will fire automatically after 5 commits. See `.claude/docs/para/QUICK_REFERENCE.md` for the full classification decision table.
+> **Next steps:** Run `/para-review` now to classify your existing codebase, or just start coding and triage will fire automatically after each commit. See `.claude/docs/para/QUICK_REFERENCE.md` for the full classification decision table.
