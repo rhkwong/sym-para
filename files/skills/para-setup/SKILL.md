@@ -35,9 +35,15 @@ Hook block to add:
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": "Bash",
-        "type": "command",
-        "command": "bash .para/hooks/para-hook.sh"
+        "matcher": {
+          "tools": ["Bash"]
+        },
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .para/hooks/para-hook.sh"
+          }
+        ]
       }
     ]
   }
