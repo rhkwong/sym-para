@@ -1,7 +1,7 @@
 #!/bin/sh
 # Claude Code PostToolUse hook — PARA framework file tracker
 # Fires on Bash tool use. Checks if command was a git commit.
-# If so, accumulates changed files and triggers triage at threshold.
+# If so, accumulates changed files and spawns headless Claude to triage at threshold.
 
 set -eu
 
@@ -66,7 +66,7 @@ else
 fi
 review_threshold=${review_threshold:-1}
 
-# ── 7. If threshold reached, send system message to trigger triage ───────────
+# ── 7. If threshold reached, spawn headless Claude to run triage ──────────────
 if [ "$new_count" -ge "$review_threshold" ] 2>/dev/null; then
   # Reset counter
   if command -v jq > /dev/null 2>&1; then
@@ -76,8 +76,20 @@ if [ "$new_count" -ge "$review_threshold" ] 2>/dev/null; then
     sed "s/\"commits_since_review\"[[:space:]]*:[[:space:]]*[0-9]*/\"commits_since_review\": 0/" .para/state.json > .para/state.json.tmp 2>/dev/null && mv .para/state.json.tmp .para/state.json
   fi
 
-  # Output system message — Claude will receive this as context
-  printf '{"systemMessage": "PARA review threshold reached (%s commits since last review). Run PARA triage now: read and follow .claude/skills/para-triage/SKILL.md."}\n' "$review_threshold"
+  # Guard: only run if claude is available and no triage is already in progress
+  LOCK=".para/triage.lock"
+  if command -v claude > /dev/null 2>&1 && [ ! -f "$LOCK" ]; then
+    touch "$LOCK"
+    (
+      claude -p "$(cat <<'PROMPT'
+Read and execute the PARA triage workflow defined in .claude/skills/para-triage/SKILL.md.
+Follow every step exactly. The pending files are in .para/pending_classification.txt.
+PROMPT
+      )" --dangerously-skip-permissions \
+         > .para/triage.log 2>&1
+      rm -f "$LOCK"
+    ) &
+  fi
 fi
 
 exit 0
