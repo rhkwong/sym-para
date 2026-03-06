@@ -18,9 +18,7 @@ The PARA hook is a Claude Code `PostToolUse` hook that fires after every Bash co
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": {
-          "tools": ["Bash"]
-        },
+        "matcher": "Bash",
         "hooks": [
           {
             "type": "command",

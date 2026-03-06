@@ -35,9 +35,7 @@ Hook block to add:
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": {
-          "tools": ["Bash"]
-        },
+        "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
