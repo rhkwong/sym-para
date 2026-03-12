@@ -20,7 +20,7 @@ Read `.para/config.json`. Extract `review_threshold` (default: 5).
 Read `.para/pending_classification.txt`. If the file is missing or its content is empty (zero bytes or only whitespace):
 
 1. Output to the user: "No files pending PARA classification. Files are added to the pending list automatically on git commit (if the hook is installed), or you can run `/para-review` for a full repository review."
-2. Check if the PARA hook is installed: read `.claude/settings.json` and look for an entry containing `para-hook.sh` in the `PostToolUse` hooks. If not found, also output: "The PARA commit hook is not installed yet. Run `/para-setup` to install it."
+2. Check if the PARA hook is installed: read `.git/hooks/post-commit` and look for a `symposia:sym-para` marker section. If not found, also output: "The PARA post-commit hook is not installed yet. Run `sym sync` to install it."
 3. **STOP** — write nothing else, exit with no changes.
 
 If the file has content, collect each non-blank line as a file path to classify.

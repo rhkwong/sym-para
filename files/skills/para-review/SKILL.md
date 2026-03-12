@@ -22,6 +22,7 @@ Verify and fix the following before beginning the review:
 - [ ] `.para/pending_classification.txt` exists (may be empty) — **create empty file if missing**
 - [ ] `.para/reviews/` directory exists — **create directory if missing**
 - [ ] `.para/archive-index.json` exists — **create file containing `[]` if missing**
+- [ ] `.git/hooks/post-commit` contains a `symposia:sym-para` marker section — **warn user to run `sym sync`** if missing (continue review — the hook is not required for manual reviews)
 - [ ] The repository has at least one commit in `git log` — **STOP if no commits**
 
 Only STOP for truly unrecoverable issues (no git repo, missing `.para/config.json` or `.para/state.json`). Create any missing infrastructure files automatically.

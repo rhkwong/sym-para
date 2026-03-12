@@ -1,55 +1,37 @@
 # PARA Hook Setup
 
-The PARA hook is a Claude Code `PostToolUse` hook that fires after every Bash command. It detects `git commit` commands, logs changed files, and triggers PARA triage when the commit threshold is reached.
+The PARA hook is a git `post-commit` hook that fires after every commit. It logs changed files and triggers PARA triage when the commit threshold is reached.
 
 ## How It Works
 
-1. Claude runs a `git commit` via the Bash tool
+1. You make a `git commit` (from any tool — terminal, IDE, Claude Code, etc.)
 2. The hook appends changed file paths to `.para/pending_classification.txt`
 3. The hook increments `commits_since_review` in `.para/state.json`
-4. When `commits_since_review >= review_threshold` (default: 5), the hook sends a system message instructing Claude to run triage per `.claude/skills/para-triage/SKILL.md`
+4. When `commits_since_review >= review_threshold` (default: 5), the hook spawns a headless Claude session to run triage per `.claude/skills/para-triage/SKILL.md`
 
 ## Install
 
-1. Add the hook to `.claude/settings.json`:
+The hook is automatically injected into `.git/hooks/post-commit` by `sym add` / `sym sync`. No manual setup is needed.
 
-```json
-{
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash .para/hooks/para-hook.sh"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-2. Make the hook script executable:
+To verify the hook is installed:
 
 ```sh
-chmod +x .para/hooks/para-hook.sh
+grep -q "symposia:sym-para" .git/hooks/post-commit && echo "Installed" || echo "Not installed"
 ```
 
-3. Restart Claude Code to load the hook.
+If the hook is missing, run:
 
-## Merge with Existing Hooks
+```sh
+sym sync
+```
 
-| Existing `PostToolUse`? | Action |
-|------------------------|--------|
-| No `hooks` key | Add the full `hooks` block above |
-| Has `hooks` but no `PostToolUse` | Add the `PostToolUse` array |
-| Has `PostToolUse` array | Append the PARA hook object to the array |
+## Coexistence with Other Hooks
+
+The PARA hook content is wrapped in marker comments (`# --- symposia:sym-para ---`). Other hook content in `.git/hooks/post-commit` is preserved. If you use a hook manager (husky, lefthook, etc.), the PARA section coexists alongside it.
 
 ## Verify
 
-1. Make a test commit in a Claude Code session
+1. Make a test commit
 2. Check `.para/pending_classification.txt` — **MUST** contain the committed file paths
 3. Check `.para/state.json` — `commits_since_review` **MUST** be incremented
 
@@ -63,14 +45,14 @@ Edit `.para/config.json`:
 
 ## Uninstall
 
-1. Remove the PARA hook entry from `.claude/settings.json`
-2. Restart Claude Code
+Run `sym remove sym-para` to cleanly remove the hook section from `.git/hooks/post-commit`.
 
 ## Prerequisites
 
 | Dependency | Required? | Notes |
 |-----------|-----------|-------|
-| Claude Code | **Yes** | Hook only fires inside Claude Code sessions |
+| `git` | **Yes** | Hook fires on git commit |
+| `claude` CLI | No | Required only for auto-triage at threshold |
 | `jq` | No | Used if available; falls back to `sed`/`grep` |
 
 ## Version Control

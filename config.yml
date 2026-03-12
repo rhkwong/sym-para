@@ -1,7 +1,10 @@
 name: sym-para
-version: 1.4.0
-description: PARA framework (Projects, Areas, Resources, Archive) for codebase knowledge organization with Claude Code hook-triggered triage on git commit.
-postInstall: "Run /para-setup to install the git commit hook and initialize PARA infrastructure."
+version: 2.0.0
+description: PARA framework (Projects, Areas, Resources, Archive) for codebase knowledge organization with git post-commit hook-triggered triage.
+postInstall:
+  message: "PARA post-commit hook installed. Running setup to configure .gitignore and initialize infrastructure."
+  activate:
+    file: files/skills/para-setup/SKILL.md
 
 files:
   - path: files/QUICK_REFERENCE.md
@@ -18,8 +21,6 @@ files:
     dest: .claude/skills/para-triage/SKILL.md
   - path: files/skills/para-review/SKILL.md
     dest: .claude/skills/para-review/SKILL.md
-  - path: files/para-hook.sh
-    dest: .para/hooks/para-hook.sh
   - path: files/templates/config.json
     dest: .para/config.json
   - path: files/templates/state.json
@@ -30,6 +31,12 @@ files:
     dest: .para/archive-index.json
   - path: files/templates/.gitkeep-reviews
     dest: .para/reviews/.gitkeep
+
+inject:
+  - source: files/post-commit.sh
+    dest: .git/hooks/post-commit
+    comment: "#"
+    executable: true
 
 instructions:
   - targets:
